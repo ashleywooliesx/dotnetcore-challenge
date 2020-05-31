@@ -6,7 +6,10 @@ namespace WooliesX.Challenge.Api.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<ITrolleyService, TrolleyService>();
+            services.AddTransient<IProductsService, ProductsService>();
+
+            return services;
         }
     }
 }
