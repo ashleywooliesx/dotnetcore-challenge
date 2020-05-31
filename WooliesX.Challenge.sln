@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WooliesX.Challenge.Api", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WooliesX.Challenge.IntegrationTests", "WooliesX.Challenge.IntegrationTests\WooliesX.Challenge.IntegrationTests.csproj", "{F8917947-B81F-496F-9AC4-4360456A06AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WooliesX.Challenge.UnitTests", "WooliesX.Challenge.UnitTests\WooliesX.Challenge.UnitTests.csproj", "{BF898079-6FE7-4312-AACC-18A554B93B84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F8917947-B81F-496F-9AC4-4360456A06AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8917947-B81F-496F-9AC4-4360456A06AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8917947-B81F-496F-9AC4-4360456A06AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF898079-6FE7-4312-AACC-18A554B93B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF898079-6FE7-4312-AACC-18A554B93B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF898079-6FE7-4312-AACC-18A554B93B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF898079-6FE7-4312-AACC-18A554B93B84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

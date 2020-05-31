@@ -26,7 +26,7 @@ namespace WooliesX.Challenge.IntegrationTests
         }
 
         [Fact]
-        public async Task Http_Get_Many()
+        public async Task ResponseContainsCorrectUserContent()
         {
             // Arrange
             using var httpClient = Fixture.CreateClient();

@@ -1,8 +1,15 @@
+using System.Reflection;
+
+using MediatR;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using WooliesX.Challenge.Api.Options;
+using WooliesX.Challenge.Api.Services;
 
 namespace WooliesX.Challenge.Api
 {
@@ -19,6 +26,12 @@ namespace WooliesX.Challenge.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddServices();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddHttpClient();
+            services.Configure<UserOptions>(Configuration.GetSection("User"));
+            services.Configure<ResourceApiOptions>(Configuration.GetSection("ResourceApi"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

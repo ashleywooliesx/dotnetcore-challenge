@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
+using WooliesX.Challenge.Api.Options;
 
 namespace WooliesX.Challenge.Api.Controllers
 {
@@ -6,14 +9,21 @@ namespace WooliesX.Challenge.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly UserOptions _userOptions;
+
+        public UserController(IOptions<UserOptions> userOptions)
+        {
+            _userOptions = userOptions.Value;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(
                 new
                 {
-                    Name = "Ashley Dass",
-                    Token = "2499dd7f-f06e-4073-8fae-fb28dbd9dc1e"
+                    _userOptions.Name,
+                    _userOptions.Token
                 });
         }
     }
