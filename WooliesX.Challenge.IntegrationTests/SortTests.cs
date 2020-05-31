@@ -35,7 +35,7 @@ namespace WooliesX.Challenge.IntegrationTests
             using var httpClient = Fixture.CreateClient();
 
             // Act
-            using var response = await httpClient.GetAsync("api/sort");
+            using var response = await httpClient.GetAsync("api/sort?sortOption=Recommended");
 
             // Assert
             response

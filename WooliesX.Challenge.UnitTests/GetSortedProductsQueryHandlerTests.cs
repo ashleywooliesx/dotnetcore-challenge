@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,25 +26,68 @@ namespace WooliesX.Challenge.UnitTests
 
         private readonly Product _productD;
 
+        private readonly Product _productF;
+
         public GetSortedProductsQueryHandlerTests()
         {
             _productA = new Product("Product-A", 400, 1);
             _productB = new Product("Product-B", 300, 2);
             _productC = new Product("Product-C", 200, 3);
             _productD = new Product("Product-D", 100, 4);
-            
+            _productF = new Product("Product-F", 500, 5);
+
             var products = new[]
             {
                 _productA,
                 _productB,
                 _productC,
                 _productD,
+                _productF,
             };
 
             var mockProductsService = Substitute.For<IProductsService>();
             mockProductsService
                 .GetProducts(Arg.Any<CancellationToken>())
                 .Returns(products);
+
+            var shoppingHistory = new[]
+            {
+                new CustomerProducts(
+                    123,
+                    new[]
+                    {
+                        new Product("Product-A", 100, 3),
+                        new Product("Product-B", 100, 1),
+                        new Product("Product-F", 100, 1),
+                    }),
+                new CustomerProducts(
+                    23,
+                    new[]
+                    {
+                        new Product("Product-A", 100, 2),
+                        new Product("Product-B", 100, 3),
+                        new Product("Product-F", 100, 1),
+                    }),
+                new CustomerProducts(
+                    23,
+                    new[]
+                    {
+                        new Product("Product-C", 100, 2),
+                        new Product("Product-F", 100, 2),
+                    }),
+                new CustomerProducts(
+                    23,
+                    new[]
+                    {
+                        new Product("Product-A", 100, 1),
+                        new Product("Product-B", 100, 1),
+                        new Product("Product-C", 100, 1),
+                    })
+            };
+
+            mockProductsService
+                .GetShoppingHistory(Arg.Any<CancellationToken>())
+                .Returns(shoppingHistory);
 
             _handler = new GetSortedProductsQuery.GetSortedProductsQueryHandler(mockProductsService);
         }
@@ -61,7 +105,7 @@ namespace WooliesX.Challenge.UnitTests
             response
                 .Products
                 .Should()
-                .ContainInOrder(_productD, _productC, _productB, _productA);
+                .ContainInOrder(_productD, _productC, _productB, _productA, _productF);
         }
 
         [Fact]
@@ -77,7 +121,7 @@ namespace WooliesX.Challenge.UnitTests
             response
                 .Products
                 .Should()
-                .ContainInOrder(_productA, _productB, _productC, _productD);
+                .ContainInOrder(_productF, _productA, _productB, _productC, _productD);
         }
 
         [Fact]
@@ -93,7 +137,7 @@ namespace WooliesX.Challenge.UnitTests
             response
                 .Products
                 .Should()
-                .ContainInOrder(_productA, _productB, _productC, _productD);
+                .ContainInOrder(_productA, _productB, _productC, _productD, _productF);
         }
 
         [Fact]
@@ -109,7 +153,24 @@ namespace WooliesX.Challenge.UnitTests
             response
                 .Products
                 .Should()
-                .ContainInOrder(_productD, _productC, _productB, _productA);
+                .ContainInOrder(_productF, _productD, _productC, _productB, _productA);
+        }
+
+        [Fact]
+        public async Task GivenProductsExistWhenSortedByRecommendedThenResponseIsSortedCorrectly()
+        {
+            // Arrange
+            var request = new GetSortedProductsQuery(SortOption.Recommended);
+
+            // Act
+            var response = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            response
+                .Products
+                .Select(p => p.Name)
+                .Should()
+                .ContainInOrder("Product-A", "Product-B", "Product-F", "Product-C");
         }
     }
 }

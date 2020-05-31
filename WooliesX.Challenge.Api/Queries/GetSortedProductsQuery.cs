@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,10 +39,38 @@ namespace WooliesX.Challenge.Api.Queries
                     SortOption.High => products.OrderByDescending(p => p.Price),
                     SortOption.Ascending => products.OrderBy(p => p.Name),
                     SortOption.Descending => products.OrderByDescending(p => p.Name),
+                    SortOption.Recommended => await GetProductsByRecommended(cancellationToken),
                     _ => throw new ArgumentOutOfRangeException(nameof(request.SortOption))
                 };
 
                 return new ProductsResponse(sortedProducts);
+            }
+
+            private async Task<IEnumerable<Product>> GetProductsByRecommended(CancellationToken cancellationToken)
+            {
+                var shoppingHistory = await _productsService.GetShoppingHistory(cancellationToken);
+                var soldProducts = new Dictionary<string, SoldProduct>();
+
+                foreach (var customerProducts in shoppingHistory)
+                {
+                    foreach (var customerProduct in customerProducts.Products)
+                    {
+                        if (soldProducts.ContainsKey(customerProduct.Name))
+                        {
+                            soldProducts[customerProduct.Name].QuantitySold += customerProduct.Quantity;
+                            soldProducts[customerProduct.Name].SoldCount++;
+                        }
+                        else
+                        {
+                            soldProducts.Add(customerProduct.Name, new SoldProduct(customerProduct));
+                        }
+                    }
+                }
+
+                return soldProducts.Values
+                    .OrderByDescending(p => p.SoldCount)
+                    .ThenByDescending(p => p.QuantitySold)
+                    .Select(p => p.Product);
             }
         }
     }

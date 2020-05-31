@@ -16,6 +16,8 @@ namespace WooliesX.Challenge.Api.Services
     public interface IProductsService
     {
         Task<IEnumerable<Product>> GetProducts(CancellationToken cancellationToken);
+
+        Task<IEnumerable<CustomerProducts>> GetShoppingHistory(CancellationToken cancellationToken);
     }
 
     internal class ProductsService : IProductsService
@@ -46,6 +48,21 @@ namespace WooliesX.Challenge.Api.Services
             var response = await httpClient.SendAsync(message, cancellationToken);
 
             return JsonConvert.DeserializeObject<IEnumerable<Product>>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<IEnumerable<CustomerProducts>> GetShoppingHistory(CancellationToken cancellationToken)
+        {
+            using var httpClient = _httpClientFactory.CreateClient();
+
+            var resourceApiBaseUrl = Url.Combine(
+                _resourceApiOptions.BaseUrl,
+                $"shopperHistory?token={_userOptions.Token}");
+
+            var message = new HttpRequestMessage(HttpMethod.Get, resourceApiBaseUrl);
+
+            var response = await httpClient.SendAsync(message, cancellationToken);
+
+            return JsonConvert.DeserializeObject<IEnumerable<CustomerProducts>>(await response.Content.ReadAsStringAsync());
         }
     }
 }
