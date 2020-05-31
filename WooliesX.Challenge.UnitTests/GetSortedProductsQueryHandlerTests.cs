@@ -170,7 +170,7 @@ namespace WooliesX.Challenge.UnitTests
                 .Products
                 .Select(p => p.Name)
                 .Should()
-                .ContainInOrder("Product-A", "Product-B", "Product-F", "Product-C");
+                .ContainInOrder("Product-A", "Product-B", "Product-F", "Product-C", "Product-D");
         }
     }
 }
